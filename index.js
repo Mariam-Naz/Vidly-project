@@ -1,14 +1,17 @@
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const Joi = require("joi");
 const config = require("config");
 const authenticate = require("./middleware/authentication")
 
+mongoose.connect('mongodb://0.0.0.0:27017/movies')
+.then(() => console.log('Connected to MondoDB'))
+.catch(err => console.log('Could not connect to MongoDB', err))
 //Routes
 const genres = require("./routes/genres");
 const home = require("./routes/home");
-
+const customers = require("./routes/customers");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -18,6 +21,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(authenticate);
 app.use("/api/genres", genres);
 app.use("/", home);
+app.use("/api/customers", customers);
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
